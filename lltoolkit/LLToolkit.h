@@ -7,108 +7,105 @@ namespace LinkedList
 	// Precondition: 
 	// Postcondition: A new element containing 'data' is inserted at the head of the list pointed to by 'head'
 	template<typename T>
-	void headInsert(Node<T>*& headPtr, const T& data)
+	void headInsert(Node<T>*& head, const T& data)
 	{
-		headPtr = new Node<T>(data, headPtr);
+		head = new Node<T>(data, head);
 	}
 
 	// Precondition: 
-	// Postcondition: The head element (if any) has been removed and headPtr is updated to point to the new 
+	// Postcondition: The head element (if any) has been removed and 'head' is updated to point to the new 
 	// head element
 	template<typename T>
-	void headRemove(Node<T>*& headPtr)
+	void headRemove(Node<T>*& head)
 	{
-		if (headPtr != nullptr)
+		if (head != nullptr)
 		{
-			Node<T>* condemned = headPtr;
-			headPtr = headPtr->next;
+			Node<T>* condemned = head;
+			head = head->next;
 			delete condemned;
 		}
 	}
 
 
-	// Precondition: prevPtr points to Node just before insertion point
-	// Postcondition: A new Node with data=info has been inserted into the list after prevPtr
+	// Precondition: 'prev' points to Node just before insertion point
+	// Postcondition: A new Node with data=info has been inserted into the list after 'prev'
 	template<typename T>
-	void insert(Node<T>*& prevPtr, const T& data)
+	void insert(Node<T>*& prev, const T& data)
 	{
-		if (prevPtr == nullptr) return;
-		prevPtr->next = new Node<T>(data, prevPtr->next);
+		if (prev != nullptr) prev->next = new Node<T>(data, prev->next);
 	}
 
 
-	// Precondition: prevPtr points to Node just before Node to remove
-	// Postcondition: The Node after prevPtr has been removed from the list 
+	// Precondition: 'prev' points to node immediately before the node to remove
+	// Postcondition: The Node after 'prev' has been removed from the list 
 	template<typename T>
-	void remove(Node<T>*& prevPtr)
+	void remove(Node<T>*& prev)
 	{
-		if (prevPtr == nullptr) return;
-		if (prevPtr->next == nullptr) return;
-		Node<T>* condemned = prevPtr->next;
-		prevPtr->next = condemned->next;
-		delete prevPtr->next;
+		if (prev == nullptr || prev->next == nullptr) return;
+
+		Node<T>* condemned = prev->next;
+		prev->next = condemned->next;
+		delete condemned;
 	}
 
 
-	// Precondition: sourcePtr is the head pointer of a linked list.
+	// Precondition: source is the head pointer of a linked list.
 	// Postcondition: A pointer to a copy of the linked list is returned. The original list is 
 	// unaltered.
 	template<typename T>
-	Node<T>* copy(Node<T>* sourcePtr)
+	Node<T>* copy(Node<T>* source)
 	{
-		Node<T>* headPtr = nullptr;	// Head pointer for new list
-		Node<T>* tailPtr = nullptr;
-
+		Node<T>* copyHead = nullptr;	// Head of the copy
+		
 		// Handle the case of the empty list.
-		if (sourcePtr == nullptr) return headPtr;
+		if (source == nullptr) return copyHead;
 
 		// Make the head LLNode for the newly created list, and put data in it.
-		headInsert(headPtr, sourcePtr->info);
-		tailPtr = headPtr;
+		headInsert(copyHead, source->info);
+		Node<T>* tail = tail = copyHead;
 
 		// Copy the rest of the nodes one at a time, adding at the tail of new list.
-		for (sourcePtr = sourcePtr->next; sourcePtr != nullptr; tailPtr = tailPtr->next, sourcePtr = sourcePtr->next)
+		for (source = source->next; source != nullptr; tail = tail->next, source = source->next)
 		{
-			insert(tailPtr, sourcePtr->info);
+			insert(tail, source->info);
 		}
-		return headPtr;
+		return copyHead;
 	}
 
 
 
-	// Precondition: headPtr is the head pointer of a linked list.
-	// Postcondition: All nodes of the list have been deleted, and the headPtr is nullptr.
+	// Precondition: 'head' is the head pointer of a linked list.
+	// Postcondition: All nodes of the list have been deleted, and the 'head' is nullptr.
 	template<typename T>
-	void clear(Node<T>*& headPtr)
+	void clear(Node<T>*& head)
 	{
-		while (headPtr) headRemove(headPtr);
+		while (head) headRemove(head);
 	}
 
 
-	// Precondition: headPtr is the head pointer of a linked list.
-	// Postcondition: headPtr points to the start of a list that is reversed with respect to the 
+	// Precondition: 'head' is the head pointer of a linked list.
+	// Postcondition: 'head' points to the start of a list that is reversed with respect to the 
 	// original list
 	template<typename T>
-	void reverse(Node<T>*& headPtr)
+	void reverse(Node<T>*& head)
 	{
 		// If the list is either empty or contains only one 
 		// element, reversal is trivial
-		if (headPtr == nullptr || headPtr->next == nullptr) return;
-		Node<T>* prev, *n, *next;
+		if (head == nullptr || head->next == nullptr) return;
 
-		prev = headPtr;
-		n = prev->next;
+		Node<T> * prev = head;
+		Node<T> *n = prev->next;
 
 		while (n != nullptr)
 		{
-			next = n->next;
+			Node<T> *next = n->next;
 			n->next = prev;
 
 			prev = n;
 			n = next;
 		}
-		headPtr->next = nullptr;
-		headPtr = prev;
+		head->next = nullptr;
+		head = prev;
 	}
 
 	// Precondition: splitPtr points to the node before the split point
@@ -180,7 +177,7 @@ namespace LinkedList
 	// Postcondition: A pointer is returned that points to the head
 	// of a list in which the nodes contains values from the array values
 	template<typename T>
-	Node<T>* build(T* values, size_t n)
+	Node<T>* build(T* values, int n)
 	{
 		Node<T>* head = nullptr;
 		for (int i = n - 1; i >= 0; i--)
