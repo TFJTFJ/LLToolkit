@@ -4,6 +4,8 @@
 
 namespace LinkedList
 {
+	// Precondition: 
+	// Postcondition: A new element containing 'data' is inserted at the head of the list pointed to by 'head'
 	template<typename T>
 	void headInsert(Node<T>*& headPtr, const T& data)
 	{
